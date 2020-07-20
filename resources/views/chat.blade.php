@@ -20,7 +20,11 @@
                 <td></td>
                 <td class="text-right">
                     <a href="{{ route('join-group', ['groupId' => $group->id])}}" class="btn btn-outline-info" type="button">
-                        Join <i class="fa fa-users" aria-hidden="true"></i>
+                        @if(!$group->user_id ) Join
+                        <i class="fa fa-users" aria-hidden="true"></i> @else
+                        Let's chat
+                        <i class="fa fa-comments" aria-hidden="true"></i>
+                        @endif
                     </a>
                 </td>
             </tr>

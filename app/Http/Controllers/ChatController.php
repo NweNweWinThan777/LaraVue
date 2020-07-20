@@ -16,7 +16,12 @@ class ChatController extends Controller
      */
     public function index()
     {
-        $chatGroups = GroupChatTitle::all();
+        $chatGroups = GroupChatTitle::select('group_chat_title.id', 'group_chat_title.name', 'user_id')
+            ->leftJoin('group_chat_title_to_users_relation',  function ($join) {
+                $join->on('group_chat_title_to_users_relation.group_chat_title_id', '=', 'group_chat_title.id')
+                    ->where('group_chat_title_to_users_relation.user_id', Auth::user()->id);
+            })
+            ->get();
         return view('chat', compact('chatGroups'));
     }
 
@@ -31,7 +36,7 @@ class ChatController extends Controller
 
         $duplicates = GroupChatTitleToUsersRelation::where('user_id', Auth::user()->id)
             ->where('group_chat_title_id', $groupId)
-            ->get();
+            ->first();
 
         if (!$duplicates) {
             $data = new GroupChatTitleToUsersRelation();
